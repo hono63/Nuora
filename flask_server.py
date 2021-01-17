@@ -21,8 +21,23 @@ def route():
 def index():
     userlist  = dbc.get_json_list(User)
     tweetlist = dbc.get_json_list(Tweet)
+    # 親子紐付け
+    id2index  = {}
+    for idx, twt in enumerate(tweetlist):
+        id2index[twt["id"]] = idx
+    for twt in tweetlist:
+        if twt.get("toid", None) is not None:
+            toidx = id2index[twt["toid"]]
+            if "_children" in tweetlist[toidx]:
+                tweetlist[toidx]["_children"].append(copy.deepcopy(twt))
+            else:
+                tweetlist[toidx]["_children"] = [copy.deepcopy(twt)]
+    tweetlist2 = [twt for twt in tweetlist if twt.get("toid", None) is None] # 親だけのリスト
+    for twt in tweetlist2:
+        if "_children" in twt:
+            twt["_children"].sort(key=lambda x: x["created"]) # 子供は昇順でソート
     #print(userslist)
-    return render_template("index.html", users=userlist, tweets=tweetlist)
+    return render_template("index.html", users=userlist, tweets=tweetlist2)
 
 @app.route('/update-data', methods=["POST"])
 def update_data():

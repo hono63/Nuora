@@ -38,7 +38,7 @@ class Tweet(db.Model):
     def __repr__(self):
         return '<Spec %s>' % self.name
     def add_cb(self):
-        self.created = str(datetime.datetime.now().strftime("%Y/%m/%d %H:%M"))
+        self.created = str(datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
     def update_cb(self):
         pass
 
