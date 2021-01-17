@@ -89,18 +89,15 @@
     // ここでは行を追加するだけ。DBには登録しない
     if (row == null){
       table.addRow({"flag_tweet": true}, true, 0); // insert row next to the "index"
-      let focus_row = table.getRowFromPosition(0);
-      focus_row.reformat();
-      focus_row.getCell("tweet").edit(); // focus
+      var focus_row = table.getRowFromPosition(0);
     } else {
       let rowdata = row.getData();
       row.addTreeChild({"flag_tweet": true, "toid": rowdata["id"]}, false); // 一番うしろの子供として追加
       setTimeout(row.treeExpand(), 1000);
       let children = row.getTreeChildren()
-      let focus_row = children[children.length - 1]
-      focus_row.reformat();
-      focus_row.getCell("tweet").edit(); // focus
+      var focus_row = children[children.length - 1]
     }
+    focus_row.getCell("tweet").edit(); // focus
   }
   function updateTheRow(modelname, row, table) {
     // 行を更新してDBへ登録。
