@@ -1,10 +1,18 @@
 {% extends "template.html" %}
 {% block content %}
 <title>Tweet2777</title>
-<h2>Tweet Table</h2>
-<button id="add-tweet" type="button" class="btn btn-primary">Add New</button>
+<div class="container"><div class="row">
+  <div class="col-md-12">
+    <h2>Tweet Table</h2>
+    <button id="add-tweet" type="button" class="btn btn-primary">Add New</button>
+  </div>
+</div></div>
 <hr>
-<div id="tweet-table"></div>
+<div class="container"><div class="row">
+  <div class="col-md-12">
+    <div id="tweet-table"></div>
+  </div>
+</div></div>
 <script>
   // ========= Tweet Table ========== //
   var userdata  = {{users|tojson}};
