@@ -1,0 +1,126 @@
+{% extends "template.html" %}
+{% block content %}
+<title>Editor2777</title>
+<!-- Form ================================================== -->
+<div class="form">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <p class="lead">
+          {% if name %}
+            Hello {{ name }} san
+          {% else %}
+            {{ message }}
+          {% endif %}
+        </p>
+        <form action="/post" method="post" class="form-inline">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<h2>Tweet Table</h2>
+<hr>
+<div id="tweet-table"></div>
+<script>
+  // ========= Tweet Table ========== //
+  var userdata  = {{users|tojson}};
+  var tweetdata  = {{tweets|tojson}};
+  var tweettable = new Tabulator("#tweet-table", {
+    height:200,
+    data:tweetdata, 
+    selectable: 1,
+    layout:"fitColumns", 
+    columns:[ 
+      {title:"ID", field:"id", width:100},
+      {title:"", field:"guid", width:100},
+      {formatter:function(){
+          return "<i class='fa fa-comment'></i>";
+        }, 
+        width:40, 
+        hozAlign:"center", 
+        cellClick:function(e, cell){
+          insertNewTweet(tweettable, cell.getRow().getPosition(true));
+      }},
+      {title:"Tweet", field:"tweet", formatter:function(cell, fp){
+        if (cell.getData()["flag_tweet"]) {
+          return "<div class='input-group'>"
+                + "<textarea class='form-control'></textarea>"
+                + "<div class='input-group-append'>"
+                +   "<button class='btn btn-primary' type='button' id='tweet-btn'>Tweet</button>"
+                +"</div></div>";
+        } else {
+          return cell.getData()["tweet"];
+        }
+      }},
+      {title:"User", field:"userid", width:200},
+      {title:"Time", field:"created", width:200},
+      {formatter:function(){
+          return "<i class='fa fa-thumbs-up'></i>";
+        }, 
+        width:40, 
+        hozAlign:"center", 
+        cellClick:function(e, cell){
+          alert("いいね");
+      }},
+    ],
+    cellEdited:function(cell){
+      addData("tweet", cell.getData(), tweettable);
+    },
+  });
+  $("#tweet-btn").on("click", function(){
+    //addData("tweet", null, tweettable);
+  });
+  $("#del-tweet").on("click", function(){
+    deleteData("tweet", tweettable.getSelectedRows()[0].getData(), tweettable);
+  });
+  function insertNewTweet(table, index){
+    table.addRow({"id": -1, "flag_tweet": true}, true, index); // insert row next to the "index"
+  }
+  function addData(modelname, newdata, table) {
+    let ajax_data = {};
+    if (newdata == null) {
+      ajax_data = {modelname: modelname, name:"newdata", flag_addupd: 1};
+    } else {
+      ajax_data = Object.assign({modelname: modelname, flag_addupd: 1}, newdata);
+    }
+    $.ajax({
+      url: "update-data",
+      type: "POST",
+      data: ajax_data,
+      timeout: 5000,
+    })
+    .done(function(data){
+      let upd_data = data["updated_data"];
+      table.updateOrAddData([upd_data]);
+      //alert("Success");
+    })
+    .fail(function(){
+      alert("Failed");
+    })
+  }
+  function deleteData(modelname, deldata, table) {
+    let del_id = deldata["id"];
+    let ajax_data = {modelname: modelname, id: del_id, flag_delete: 1};
+    $.ajax({
+      url: "update-data",
+      type: "POST",
+      data: ajax_data,
+      timeout: 5000,
+    })
+    .done(function(data){
+      table.deleteRow(del_id);
+      //alert("Success");
+    })
+    .fail(function(){
+      alert("Failed");
+    })
+  }
+  window.onload = function(){
+    insertNewTweet(tweettable, 0); // insert new tweet top of the table
+  }
+</script>
+{% endblock %}
