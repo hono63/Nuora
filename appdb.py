@@ -2,9 +2,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask("Editor2777")
+app = Flask("Nuora")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///data.sqlite3"
+# SQLite3を使う
+#app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///data.sqlite3"
+
+# PostgreSQLを使う user:password@host/name という書式。
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://hono63:p@ssword@127.0.0.1/nuoradb"
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
