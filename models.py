@@ -27,7 +27,7 @@ class User(db.Model):
 
 class Tweet(db.Model):
     id      = db.Column(db.Integer, primary_key=True)
-    kind    = db.Column(db.Integer)
+    tags    = db.Column(db.String)
     tweet   = db.Column(db.String)
     userid  = db.Column(db.Integer)
     toid    = db.Column(db.Integer)
@@ -42,8 +42,14 @@ class Tweet(db.Model):
     def update_cb(self):
         pass
 
-
-KIND = {
-    1: "kizuki",
-    2: "question",
-}
+class TweetTag(db.Model):
+    id      = db.Column(db.Integer, primary_key=True)
+    name    = db.Column(db.String)
+    userid  = db.Column(db.Integer)
+    created = db.Column(db.String)
+    ColInt = ("id", "userid")
+    ColStr = ("name", "created")
+    def add_cb(self):
+        self.created = str(datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+    def update_cb(self):
+        pass

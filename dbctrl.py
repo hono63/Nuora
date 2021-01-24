@@ -6,8 +6,7 @@ import uuid
 class DBCtrl():
     def __init__(self, db):
         self.db = db
-        #self.db.init_app(app)
-        self.db.create_all()
+        #self.db.create_all()
         # sample
         #self.add(User, {"name": "Junsuke"})
         #self.add(Tweet, {"tweet": "Hello"})

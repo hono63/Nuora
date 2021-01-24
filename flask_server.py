@@ -6,10 +6,11 @@ import json
 import copy
 #from npito import open_folder
 from flask import Flask, render_template, redirect, request, jsonify
-from appdb import app, db
+from appdb import db, create_app
 from dbctrl import DBCtrl
 from models import User, Tweet
 
+app = create_app()
 dbc = DBCtrl(db)
 MODELNAME = {"User": User, "Tweet": Tweet}
 
